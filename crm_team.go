@@ -6,6 +6,7 @@ package saleTeams
 import (
 	"github.com/hexya-erp/hexya/src/models"
 	"github.com/hexya-erp/pool/h"
+	"github.com/hexya-erp/pool/m"
 	"github.com/hexya-erp/pool/q"
 )
 
@@ -15,11 +16,11 @@ func init() {
 
 	h.CRMTeam().Methods().GetDefaultTeam().DeclareMethod(
 		`GetDefaultTeam returns the default sales team`,
-		func(rs h.CRMTeamSet, user h.UserSet) h.CRMTeamSet {
+		func(rs m.CRMTeamSet, user m.UserSet) m.CRMTeamSet {
 			if user.IsEmpty() {
 				user = h.User().NewSet(rs.Env()).CurrentUser()
 			}
-			var team h.CRMTeamSet
+			var team m.CRMTeamSet
 			if rs.Env().Context().HasKey("default_team_id") {
 				team = h.CRMTeam().Browse(rs.Env(), []int64{rs.Env().Context().GetInteger("default_team_id")})
 				if !team.IsEmpty() {
@@ -56,7 +57,7 @@ func init() {
 	})
 
 	h.CRMTeam().Methods().Create().Extend("",
-		func(rs h.CRMTeamSet, data *h.CRMTeamData) h.CRMTeamSet {
+		func(rs m.CRMTeamSet, data m.CRMTeamData) m.CRMTeamSet {
 			return rs.WithContext("mail_create_nosubscribe", true).Super().Create(data)
 		})
 
